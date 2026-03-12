@@ -1,0 +1,16 @@
+{
+  "python.defaultInterpreterPath": "/Users/savvasgymnopoulos/.local/share/virtualenvs/storefront-9ONmHl-x/bin/python3",
+  "python.analysis.extraPaths": [
+    "/Users/savvasgymnopoulos/.local/share/virtualenvs/storefront-9ONmHl-x/lib/python3.14/site-packages"
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingModuleSource": "none"
+  },
+  "python.terminal.activateEnvironment": true,
+  "terminal.integrated.env.osx": {
+    "VIRTUAL_ENV": "/Users/savvasgymnopoulos/.local/share/virtualenvs/storefront-9ONmHl-x",
+    "PATH": "/Users/savvasgymnopoulos/.local/share/virtualenvs/storefront-9ONmHl-x/bin:${env:PATH}",
+    "CONDA_AUTO_ACTIVATE_BASE": "false"
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:pipenv"
+}
