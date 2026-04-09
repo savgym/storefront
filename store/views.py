@@ -1,8 +1,12 @@
+import json
+
 from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from rest_framework.reverse import reverse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import status
@@ -54,6 +58,37 @@ class ReviewViewSet(ModelViewSet):
         return {'product_id': self.kwargs['product_pk']}
 
 
-class CartViewSet(CreateModelMixin, GenericViewSet):
-    queryset = Cart.objects.all()
+class CartViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
+    queryset = Cart.objects.prefetch_related('items__product').all()
     serializer_class = CartSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cart = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        location = reverse(
+            'cart-detail', kwargs={'pk': cart.pk}, request=request)
+
+        if request.accepted_renderer.format == 'api':
+            html = f"""<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting</title>
+  </head>
+  <body>
+    <script>
+      window.top.location.href = {json.dumps(location)};
+    </script>
+    <a href="{location}">Continue</a>
+  </body>
+</html>
+"""
+            response = HttpResponse(html, status=200)
+            response['Location'] = location
+            return response
+
+        headers['Location'] = location
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
