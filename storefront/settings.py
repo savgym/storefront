@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'playground',
     'store',
-    'store_custom',
     'tags',
-    'likes'
+    'likes',
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -137,3 +137,5 @@ STATIC_URL = 'static/'
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
+
+AUTH_USER_MODEL = 'core.User'
